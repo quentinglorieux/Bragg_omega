@@ -16,7 +16,7 @@ class ExperimentController:
         """Initialize all devices with their respective connections."""
         print("Initializing experiment setup...")
 
-        self.laser = MuquansLaser(host="192.168.1.10", port=23)
+        self.laser = MuquansLaser(host="10.0.2.107", port=23)
         self.rf_gen = RFGenerator(port="COM4")
         self.wavemeter = Wavemeter(base_url="http://localhost:5000")
         self.signal_gen = RedPitayaSignalGenerator(ip="192.168.1.100")
