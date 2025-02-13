@@ -1,4 +1,4 @@
-# Experiment Control System for the Temporal Bragg Experiment
+# Control System for the Temporal Bragg Experiment
 
 This repository contains a modular **experiment control system** for automating the temporal Bragg experiment with various devices, including the **Muquans laser, the Windfreak RF generator, the wavemeter, a signal generator (using a Red Pitaya), and a spectrum analyzer (Rigol SA)**.
 
@@ -14,7 +14,7 @@ This repository contains a modular **experiment control system** for automating 
 
 ---
 
-## **📂 Project Structure**
+## ** Project Structure**
 
 - Bragg_Omega/
     - devices/
