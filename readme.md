@@ -7,25 +7,28 @@ This repository contains a modular **experiment control system** for automating 
 - **Laser Control**: Enable/disable, adjust EDFA power.
 - **RF Generator (Windfreak SynthHD)**: Differential frequency sweep control.
 - **Wavemeter**: Reads laser frequency via HTTP API.
-- **Red Pitaya (Signal Generator)**: Generates trigger pulses and provides a DC voltage.
+- ** Signal Generators** choice between RP or AFG
+  - **Red Pitaya (Signal Generator)**: Generates trigger pulses and provides a DC voltage.
+  - **Tektro AFG**: Arbitrary waveform generator for the trigger pulse.
 - **Rigol Spectrum Analyzer**: Zero-span mode, RBW/VBW, trigger, and sweep control.
 - **Modular Design**: Each device has an independent driver.
 - **Full Experiment Automation**: Connects, configures, runs, and shuts down the experiment.
 
 ---
 
-## ** Project Structure**
+## **Project Structure**
 
 - Bragg_Omega/
-    - devices/
-        - `laser.py` # Laser driver (Telnet)
-        - `rf_generator.py` # RF Generator driver (Windfreak SynthHD)
-        - `wavemeter.py` # Wavemeter driver (HTTP API)
-        - `redpitaya.py` # Red Pitaya Signal Generator driver
-        - `rigol_sa.py` # Rigol Spectrum Analyzer driver (LAN)
-    - `main_experiment.py` # Main script orchestrating the experiment
-    - `README.md` # Project documentation
-    - `requirements.txt` # Python dependencies
+  - devices/
+    - `MuquansLaser.py` # Laser driver (Telnet)
+    - `RFGenerator.py` # RF Generator driver (Windfreak SynthHD)
+    - `WaveMeter.py` # Wavemeter driver (HTTP API)
+    - `RedPitayaSignalGenerator.py` # Red Pitaya Signal Generator driver
+    - `TektroAFG.py` # Tektro AFG Signal Generator driver
+    - `RigolSA.py` # Rigol Spectrum Analyzer driver (LAN)
+  - `bragg.py` # Main script orchestrating the experiment
+  - `README.md` # Project documentation
+  - `requirements.txt` # Python dependencies
 
 ---
 
@@ -66,11 +69,15 @@ python bragg.py
 
 ### Customizing Experiment Parameters
 
-You can configure the experiment using the set_experiment method in `bragg.py`.
+You can configure the experiment using the ExperimentController class and the set_experiment method in `bragg.py`.
 
 Example:
 
 ```python
+# Signal generator: "RP" (Red Pitaya) or "AFG" (Tektronix AFG3000C)
+signal_gen_choice = "AFG"
+exp = ExperimentController(signal_generator=signal_gen_choice)
+
 exp.set_experiment(
     edfa_power=1.2, # EDFA power
     f_low=800e6,  # Start frequency for the sweep
@@ -122,8 +129,17 @@ freq = self.wavemeter.get_frequency(channel=3)
 print(f"Laser frequency: {freq} Hz")
 ```
 
-### Red Pitaya (Signal Generator)
+### Tektro AFG (Signal Generator)
 
+Set trigger pulses.
+
+```python
+self.signal_gen.set_trigger_pulse(high_level=1.8, low_level=0.0, period=1e-3, duty_cycle=50)
+self.signal_gen.set_dc_voltage(1.5) # Voltage between -5V and +5V
+```
+
+### Alternative: Red Pitaya (Signal Generator)
+Same syntax as the Tektro AFG.
 Set trigger pulses and DC control voltage.
 
 ```python
@@ -147,8 +163,9 @@ print(trace_data)
 
 ## Full Experiment Workflow
 
-The script follows this workflow: 
-1. Connect to devices (connect_all) 
-2. Configure experiment (set_experiment) 
-3. Run measurement loop (run_experiment)  # Commented for now
+The script follows this workflow:
+
+1. Connect to devices (connect_all)
+2. Configure experiment (set_experiment)
+3. Run measurement loop (run_experiment) # Commented for now
 4. Shutdown all devices safely (shutdown)

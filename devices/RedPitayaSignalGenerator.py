@@ -57,7 +57,7 @@ class RedPitayaSignalGenerator:
                 return
             
             # Calculate frequency
-            frequency = 1 / period  
+            frequency = 1 / period
 
             # Calculate amplitude & offset
             amplitude = (high_level - low_level) / 2

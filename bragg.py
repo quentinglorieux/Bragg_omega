@@ -2,6 +2,7 @@ from devices.MuquansLaser import MuquansLaser
 from devices.RFGenerator import RFGenerator
 from devices.WaveMeter import Wavemeter
 from devices.RedPitayaSignalGenerator import RedPitayaSignalGenerator
+from devices.TektroAFG import TektronixAFG3000C
 from devices.RigolSA import RigolSA
 import time
 
@@ -9,18 +10,32 @@ import time
 class ExperimentController:
     """
     Orchestrates the experiment by controlling the laser, RF generator, wavemeter,
-    signal generator (Red Pitaya), and spectrum analyzer (Rigol SA).
+    signal generator (Red Pitaya or Tektronix AFG3000C), and spectrum analyzer (Rigol SA).
     """
 
-    def __init__(self):
-        """Initialize all devices with their respective connections."""
+    def __init__(self, signal_generator="AFG"):
+        """
+        Initialize all devices with their respective connections.
+
+        Args:
+            signal_generator (str): Choose between "RP" (Red Pitaya) or "AFG" (Tektronix AFG3000C).
+        """
         print("Initializing experiment setup...")
 
         self.laser = MuquansLaser(host="10.0.2.107", port=23)
         self.rf_gen = RFGenerator(port="COM4")
         self.wavemeter = Wavemeter(base_url="http://localhost:5000")
-        self.signal_gen = RedPitayaSignalGenerator(ip="192.168.1.100")
         self.sa = RigolSA(ip="192.168.1.101")
+
+        # Signal Generator Selection
+        if signal_generator.upper() == "RP":
+            self.signal_gen = RedPitayaSignalGenerator(ip="192.168.1.100")
+            print("Using Red Pitaya as signal generator.")
+        elif signal_generator.upper() == "AFG":
+            self.signal_gen = TektronixAFG3000C(ip="192.168.1.102")
+            print("Using Tektronix AFG3000C as signal generator.")
+        else:
+            raise ValueError("Invalid signal generator selection! Use 'RP' or 'AFG'.")
 
     def connect_all(self):
         """Connect to all devices."""
@@ -84,7 +99,7 @@ class ExperimentController:
         print(f"RF Generator: Sweep from {f_low/1e6} MHz to {f_high/1e6} MHz")
         print(f"RF Generator: Sweep Duration = {sweep_duration} s")
 
-        # Configure Red Pitaya for pulses and DC output
+        # Configure Red Pitaya or AFG (same API) for pulses and DC output
         self.signal_gen.set_trigger_pulse(
             high_level=trigger_high,
             low_level=trigger_low,
@@ -154,8 +169,9 @@ class ExperimentController:
 
 
 if __name__ == "__main__":
-    exp = ExperimentController()
-    exp.connect_all()
+    # Signal generator: "RP" (Red Pitaya) or "AFG" (Tektronix AFG3000C)
+    signal_gen_choice = "AFG"
+    exp = ExperimentController(signal_generator=signal_gen_choice)
 
     # Set experiment with user-defined parameters
     exp.set_experiment(
