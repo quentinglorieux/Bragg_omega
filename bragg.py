@@ -165,9 +165,9 @@ if __name__ == "__main__":
         sa_center_freq=10e6, rbw=1e3, vbw=1e3, sa_sweep_time=2
     )
 
-    results = exp.run_experiment(num_steps=5, delay=2)
+    # results = exp.run_experiment(num_steps=5, delay=2)
     exp.shutdown()
 
     # Print results
-    for r in results:
-        print(r)
+    #for r in results:
+    #    print(r)
