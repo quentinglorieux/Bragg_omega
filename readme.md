@@ -1,4 +1,4 @@
-# Experiment Control System
+# Experiment Control System for the Temporal Bragg Experiment
 
 This repository contains a modular **experiment control system** for automating the temporal Bragg experiment with various devices, including the **Muquans laser, the Windfreak RF generator, the wavemeter, a signal generator (using a Red Pitaya), and a spectrum analyzer (Rigol SA)**.
 
@@ -16,16 +16,16 @@ This repository contains a modular **experiment control system** for automating 
 
 ## **📂 Project Structure**
 
-experiment_control/
-│── devices/
-│ ├── laser.py # Laser driver (Telnet)
-│ ├── rf_generator.py # RF Generator driver (Windfreak SynthHD)
-│ ├── wavemeter.py # Wavemeter driver (HTTP API)
-│ ├── redpitaya.py # Red Pitaya Signal Generator driver
-│ ├── rigol_sa.py # Rigol Spectrum Analyzer driver (LAN)
-│── main_experiment.py # Main script orchestrating the experiment
-│── README.md # Project documentation
-│── requirements.txt # Python dependencies
+- Bragg_Omega/
+    - devices/
+        - `laser.py` # Laser driver (Telnet)
+        - `rf_generator.py` # RF Generator driver (Windfreak SynthHD)
+        - `wavemeter.py` # Wavemeter driver (HTTP API)
+        - `redpitaya.py` # Red Pitaya Signal Generator driver
+        - `rigol_sa.py` # Rigol Spectrum Analyzer driver (LAN)
+    - `main_experiment.py` # Main script orchestrating the experiment
+    - `README.md` # Project documentation
+    - `requirements.txt` # Python dependencies
 
 ---
 
